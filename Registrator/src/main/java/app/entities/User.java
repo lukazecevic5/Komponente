@@ -22,7 +22,6 @@ public class User {
 	private long pasos;
 	private int milje;
 	private Rank rank;
-	private List<CreditCard> cards;
 	
 
 	public User() {
@@ -39,7 +38,6 @@ public class User {
 		this.pasos = pasos;
 		milje = 0;
 		this.rank = Rank.BRONZE;
-		this.cards = new ArrayList<CreditCard>(3);
 	}
 
 	
@@ -96,24 +94,6 @@ public class User {
 
 	public void setRank(Rank rank) {
 		this.rank = rank;
-	}
-
-
-
-	public void addCard(CreditCard card) throws Exception{
-		cards.add(card);
-	}
-
-
-
-	public List<CreditCard> getCards() {
-		return cards;
-	}
-
-
-
-	public void setCards(List<CreditCard> cards) {
-		this.cards = cards;
 	}
 
 

@@ -33,6 +33,7 @@ import app.entities.CreditCard;
 import app.entities.User;
 import app.forms.CardForm;
 import app.forms.RegistrationForm;
+import app.repository.CardRepository;
 import app.repository.UserRepository;
 
 @RestController
@@ -41,11 +42,13 @@ public class Controller {
 
 	private BCryptPasswordEncoder encoder;
 	private UserRepository userRepo;
+	private CardRepository cardRepo;
 
 	@Autowired
-	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo) {
+	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, CardRepository cardRepo) {
 		this.encoder = encoder;
 		this.userRepo = userRepo;
+		this.cardRepo = cardRepo;
 	}
 
 	@PostMapping("/register")
@@ -53,11 +56,9 @@ public class Controller {
 
 		try {
 
-			// iscitavamo entitet iz registracione forme
 			User user = new User(registrationForm.getIme(), registrationForm.getPrezime(), registrationForm.getEmail(),
 					encoder.encode(registrationForm.getPassword()),registrationForm.getPasos());
 
-			// cuvamo u nasoj bazi ovaj entitet
 			userRepo.saveAndFlush(user);
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
@@ -72,7 +73,6 @@ public class Controller {
 	public ResponseEntity<String> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
 
-			// izvlacimo iz tokena subject koj je postavljen da bude email
 			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
 
@@ -95,15 +95,11 @@ public class Controller {
 
 			User user = userRepo.findByEmail(email);
 			
-			userRepo.delete(user);
-			// iscitavamo entitet iz registracione forme
-			CreditCard card = new CreditCard(cardForm.getIme(), cardForm.getPrezime(),cardForm.getBroj(),cardForm.getKod());
-			user.addCard(card);
+			CreditCard card = new CreditCard(user.getIme(), user.getPrezime(),cardForm.getBroj(),cardForm.getKod());
 			
 			
-
-			// cuvamo u nasoj bazi ovaj entitet
-			userRepo.saveAndFlush(user);
+			cardRepo.saveAndFlush(card);
+			
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -124,14 +120,15 @@ public class Controller {
 			User user = userRepo.findByEmail(email);
 			
 			userRepo.delete(user);
-			// iscitavamo entitet iz registracione forme
-			User userMod = new User(registrationForm.getIme(), registrationForm.getPrezime(), registrationForm.getEmail(),
-					encoder.encode(registrationForm.getPassword()),registrationForm.getPasos());
 			
-			userMod.setId(user.getId());
-			if (!(userMod.getEmail().equals(user.getEmail()))) {
+			user.setIme(registrationForm.getIme());
+			
+			user.setPrezime(registrationForm.getPrezime());
+			
+			
+			if (!(user.getEmail().equals(registrationForm.getEmail()))) {
 				
-			      String to = userMod.getEmail();
+			      String to = registrationForm.getEmail();
 
 			      String from = "airline@gmail.com";
 
@@ -160,9 +157,13 @@ public class Controller {
 			         mex.printStackTrace();
 			      }
 			   }
+			user.setEmail(registrationForm.getEmail());
+			
+			user.setPassword(encoder.encode(registrationForm.getPassword()));
+			
+			user.setPasos(registrationForm.getPasos());
 
-			// cuvamo u nasoj bazi ovaj entitet
-			userRepo.saveAndFlush(userMod);
+			userRepo.saveAndFlush(user);
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
