@@ -1,34 +1,10 @@
-package app.entities;
+package app.forms;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-public class CreditCard {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
+public class CardForm {
 	private String ime;
 	private String prezime;
 	private long broj;
 	private int kod;
-	
-	
-	public CreditCard() {
-		super();
-	}
-	
-	
-	public CreditCard(String ime, String prezime, long broj, int kod) {
-		super();
-		this.ime = ime;
-		this.prezime = prezime;
-		this.broj = broj;
-		this.kod = kod;
-	}
-	
 	
 	public String getIme() {
 		return ime;
@@ -56,5 +32,4 @@ public class CreditCard {
 	}
 	
 	
-
 }

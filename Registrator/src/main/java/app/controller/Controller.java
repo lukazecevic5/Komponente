@@ -4,6 +4,17 @@ import static app.security.SecurityConstants.HEADER_STRING;
 import static app.security.SecurityConstants.SECRET;
 import static app.security.SecurityConstants.TOKEN_PREFIX;
 
+import java.util.Properties;
+
+import java.util.*;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.*;
+import javax.activation.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import app.entities.CreditCard;
 import app.entities.User;
+import app.forms.CardForm;
 import app.forms.RegistrationForm;
 import app.repository.UserRepository;
 
@@ -42,7 +55,7 @@ public class Controller {
 
 			// iscitavamo entitet iz registracione forme
 			User user = new User(registrationForm.getIme(), registrationForm.getPrezime(), registrationForm.getEmail(),
-					encoder.encode(registrationForm.getPassword()));
+					encoder.encode(registrationForm.getPassword()),registrationForm.getPasos());
 
 			// cuvamo u nasoj bazi ovaj entitet
 			userRepo.saveAndFlush(user);
@@ -70,6 +83,93 @@ public class Controller {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@PostMapping("/addCard")
+	public ResponseEntity<String> addCard(@RequestBody CardForm cardForm,@RequestHeader(value = HEADER_STRING) String token) {
+
+		try {
+			
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+
+			User user = userRepo.findByEmail(email);
+			
+			userRepo.delete(user);
+			// iscitavamo entitet iz registracione forme
+			CreditCard card = new CreditCard(cardForm.getIme(), cardForm.getPrezime(),cardForm.getBroj(),cardForm.getKod());
+			user.addCard(card);
+			
+			
+
+			// cuvamo u nasoj bazi ovaj entitet
+			userRepo.saveAndFlush(user);
+
+			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+	}
+	
+	@PostMapping("/editUser")
+	public ResponseEntity<String> editUser(@RequestBody RegistrationForm registrationForm,@RequestHeader(value = HEADER_STRING) String token) {
+
+		try {
+			
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+
+			User user = userRepo.findByEmail(email);
+			
+			userRepo.delete(user);
+			// iscitavamo entitet iz registracione forme
+			User userMod = new User(registrationForm.getIme(), registrationForm.getPrezime(), registrationForm.getEmail(),
+					encoder.encode(registrationForm.getPassword()),registrationForm.getPasos());
+			
+			userMod.setId(user.getId());
+			if (!(userMod.getEmail().equals(user.getEmail()))) {
+				
+			      String to = userMod.getEmail();
+
+			      String from = "airline@gmail.com";
+
+			      String host = "localhost";
+
+			      Properties properties = System.getProperties();
+
+			      properties.setProperty("mail.smtp.host", host);
+
+			      Session session = Session.getDefaultInstance(properties);
+
+			      try {
+			         MimeMessage message = new MimeMessage(session);
+
+			         message.setFrom(new InternetAddress(from));
+
+			         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			         message.setSubject("Promenjen email");
+
+			         message.setText("Mail je promenjen na vasem nalogu za bukiranje letova.");
+
+			         Transport.send(message);
+			         System.out.println("Sent message successfully....");
+			      } catch (MessagingException mex) {
+			         mex.printStackTrace();
+			      }
+			   }
+
+			// cuvamo u nasoj bazi ovaj entitet
+			userRepo.saveAndFlush(userMod);
+
+			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 	}
 
 }

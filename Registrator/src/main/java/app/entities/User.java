@@ -20,9 +20,8 @@ public class User {
 	private String email;
 	private String password;
 	private long pasos;
-	private long rankNum;
+	private int milje;
 	private Rank rank;
-	private boolean admin;
 	private List<CreditCard> cards;
 	
 
@@ -30,38 +29,40 @@ public class User {
 
 	}
 	
-	
 
-	
-
-	public User(String ime, String prezime, String email, String password) {
-		super();
-		this.ime = ime;
-		this.prezime = prezime;
-		this.email = email;
-		this.password = password;
-	}
-
-
-
-
-
-	public User(String ime, String prezime, String email, String password, long pasos, long rankNum, Rank rank,
-			boolean admin) {
+	public User(String ime, String prezime, String email, String password, long pasos) {
 		super();
 		this.ime = ime;
 		this.prezime = prezime;
 		this.email = email;
 		this.password = password;
 		this.pasos = pasos;
-		this.rankNum = rankNum;
-		this.rank = rank;
-		this.admin = admin;
+		milje = 0;
+		this.rank = Rank.BRONZE;
 		this.cards = new ArrayList<CreditCard>(3);
 	}
 
 	
+	public int getMilje() {
+		return milje;
+	}
 
+
+	public void setMilje(int milje) {
+		this.milje = milje;
+	}
+
+
+	public void addPoints(int points) {
+		milje+=points;
+	}
+	
+	public void changeRank() {
+		if (milje>10000)
+			rank = Rank.GOLD;
+		else if (milje>1000)
+			rank = Rank.SILVER;
+	}
 
 	public long getPasos() {
 		return pasos;
@@ -76,13 +77,13 @@ public class User {
 
 
 	public long getRankNum() {
-		return rankNum;
+		return milje;
 	}
 
 
 
-	public void setRankNum(long rankNum) {
-		this.rankNum = rankNum;
+	public void setRankNum(int rankNum) {
+		this.milje = rankNum;
 	}
 
 
@@ -99,14 +100,8 @@ public class User {
 
 
 
-	public boolean isAdmin() {
-		return admin;
-	}
-
-
-
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
+	public void addCard(CreditCard card) throws Exception{
+		cards.add(card);
 	}
 
 
