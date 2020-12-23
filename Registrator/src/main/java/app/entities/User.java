@@ -15,13 +15,14 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	
 	private String ime;
 	private String prezime;
 	private String email;
 	private String password;
+	private String rankic;
 	private long pasos;
 	private int milje;
-	private Rank rank;
 	
 
 	public User() {
@@ -37,7 +38,7 @@ public class User {
 		this.password = password;
 		this.pasos = pasos;
 		milje = 0;
-		this.rank = Rank.BRONZE;
+		this.rankic = "BRONZE";
 	}
 
 	
@@ -57,9 +58,9 @@ public class User {
 	
 	public void changeRank() {
 		if (milje>10000)
-			rank = Rank.GOLD;
+			rankic = "GOLD";
 		else if (milje>1000)
-			rank = Rank.SILVER;
+			rankic = "SILVER";
 	}
 
 	public long getPasos() {
@@ -86,16 +87,16 @@ public class User {
 
 
 
-	public Rank getRank() {
-		return rank;
+
+
+	public String getRankic() {
+		return rankic;
 	}
 
 
-
-	public void setRank(Rank rank) {
-		this.rank = rank;
+	public void setRankic(String rank) {
+		this.rankic = rank;
 	}
-
 
 
 	public long getId() {
