@@ -31,10 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import app.entities.Admin;
 import app.entities.CreditCard;
 import app.entities.User;
+import app.forms.AdminForm;
 import app.forms.CardForm;
 import app.forms.RegistrationForm;
+import app.repository.AdminRepository;
 import app.repository.CardRepository;
 import app.repository.UserRepository;
 
@@ -42,15 +45,17 @@ import app.repository.UserRepository;
 @RequestMapping("")
 public class Controller {
 
+	private AdminRepository adminRepo;
 	private BCryptPasswordEncoder encoder;
 	private UserRepository userRepo;
 	private CardRepository cardRepo;
 
 	@Autowired
-	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, CardRepository cardRepo) {
+	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, CardRepository cardRepo,AdminRepository adminRepo) {
 		this.encoder = encoder;
 		this.userRepo = userRepo;
 		this.cardRepo = cardRepo;
+		this.adminRepo = adminRepo;
 	}
 
 	@PostMapping("/register")
@@ -70,7 +75,19 @@ public class Controller {
 		}
 
 	}
+	@PostMapping("/loginAsAdmin")
+	public ResponseEntity<String> loginAdm(@RequestBody AdminForm form) {
 
+		try {
+			
+			Admin admin = adminRepo.findByUsername(form.getUsername());
+			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+	}
 	@GetMapping("/whoAmI")
 	public ResponseEntity<String> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
