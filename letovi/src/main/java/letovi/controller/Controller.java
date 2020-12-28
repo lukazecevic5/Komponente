@@ -51,7 +51,7 @@ public class Controller  {
 	public ResponseEntity<List<Let>> getFlightsbyStartDest(@PathVariable String dest) {
 		try {
 
-			List<Let> letovi = rep.findByStart_dest(dest);
+			List<Let> letovi = rep.findByStartdest(dest);
 
 			return new ResponseEntity<List<Let>>(letovi, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -63,7 +63,7 @@ public class Controller  {
 	public ResponseEntity<List<Let>> getFlightsbyEndDest(@PathVariable String dest) {
 		try {
 
-			List<Let> letovi = rep.findByEnd_dest(dest);
+			List<Let> letovi = rep.findByEnddest(dest);
 
 			return new ResponseEntity<List<Let>>(letovi, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -75,7 +75,7 @@ public class Controller  {
 	public ResponseEntity<List<Let>> getFlightsbyLen(@PathVariable int len) {
 		try {
 
-			List<Let> letovi = rep.findByFlight_len(len);
+			List<Let> letovi = rep.findByFlightlen(len);
 
 			return new ResponseEntity<List<Let>>(letovi, HttpStatus.ACCEPTED);
 		} catch (Exception e) {

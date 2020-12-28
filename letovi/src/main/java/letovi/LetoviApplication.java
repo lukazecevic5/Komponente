@@ -1,4 +1,4 @@
-package letovi.letovi;
+package letovi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

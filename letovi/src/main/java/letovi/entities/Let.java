@@ -21,9 +21,9 @@ public class Let {
 	}
 
 	private String avion;
-	private String start_dest;
-	private String end_dest;
-	private int flight_len;
+	private String startdest;
+	private String enddest;
+	private int flightlen;
 	private float price;
 	
 	public Let() {
@@ -33,9 +33,9 @@ public class Let {
 	public Let(String avion, String start_dest, String end_dest, int flight_len, float price) {
 		super();
 		this.avion = avion;
-		this.start_dest = start_dest;
-		this.end_dest = end_dest;
-		this.flight_len = flight_len;
+		this.startdest = start_dest;
+		this.enddest = end_dest;
+		this.flightlen = flight_len;
 		this.price = price;
 	}
 
@@ -48,28 +48,28 @@ public class Let {
 		this.avion = avion;
 	}
 
-	public String getStart_dest() {
-		return start_dest;
+	public String getStartdest() {
+		return startdest;
 	}
 
-	public void setStart_dest(String start_dest) {
-		this.start_dest = start_dest;
+	public void setStartdest(String start_dest) {
+		this.startdest = start_dest;
 	}
 
-	public String getEnd_dest() {
-		return end_dest;
+	public String getEnddest() {
+		return enddest;
 	}
 
-	public void setEnd_dest(String end_dest) {
-		this.end_dest = end_dest;
+	public void setEnddest(String end_dest) {
+		this.enddest = end_dest;
 	}
 
-	public int getFlight_len() {
-		return flight_len;
+	public int getFlightlen() {
+		return flightlen;
 	}
 
-	public void setFlight_len(int flight_len) {
-		this.flight_len = flight_len;
+	public void setFlightlen(int flight_len) {
+		this.flightlen = flight_len;
 	}
 
 	public float getPrice() {
