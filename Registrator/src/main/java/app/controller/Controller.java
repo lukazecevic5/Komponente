@@ -80,7 +80,9 @@ public class Controller {
 
 		try {
 			
-			Admin admin = adminRepo.findByUsername(form.getUsername());
+			
+			adminRepo.existsByUsername(form.getUsername());
+			adminRepo.existsByPassword(form.getPassword());
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
