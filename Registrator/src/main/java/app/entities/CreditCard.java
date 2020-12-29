@@ -13,7 +13,6 @@ public class CreditCard {
 	private long id;
 	
 	private String ime;
-	private String prezime;
 	private long broj;
 	private int kod;
 	
@@ -23,10 +22,9 @@ public class CreditCard {
 	}
 	
 	
-	public CreditCard(String ime, String prezime, long broj, int kod) {
+	public CreditCard(String ime, long broj, int kod) {
 		super();
 		this.ime = ime;
-		this.prezime = prezime;
 		this.broj = broj;
 		this.kod = kod;
 	}
@@ -38,12 +36,7 @@ public class CreditCard {
 	public void setIme(String ime) {
 		this.ime = ime;
 	}
-	public String getPrezime() {
-		return prezime;
-	}
-	public void setPrezime(String prezime) {
-		this.prezime = prezime;
-	}
+	
 	public long getBroj() {
 		return broj;
 	}

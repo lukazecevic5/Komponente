@@ -40,6 +40,7 @@ import app.forms.RegistrationForm;
 import app.repository.AdminRepository;
 import app.repository.CardRepository;
 import app.repository.UserRepository;
+import app.utils.UtilsMethods;
 
 @RestController
 @RequestMapping("")
@@ -107,11 +108,20 @@ public class Controller {
 	}
 	
 	@PostMapping("/addCard")
-	public ResponseEntity<String> addCard(@RequestBody CardForm cardForm) {
+	public ResponseEntity<String> addCard(@RequestBody CardForm cardForm,@RequestHeader(value = HEADER_STRING) String token) {
 
 		try {
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+
+			User user = userRepo.findByEmail(email);
 			
-			CreditCard card = new CreditCard(cardForm.getIme(), cardForm.getPrezime(),cardForm.getBroj(),cardForm.getKod());
+			StringBuilder sb = new StringBuilder();
+			sb.append(user.getIme());
+			sb.append(" ");
+			sb.append(user.getPrezime());
+			
+			CreditCard card = new CreditCard(sb.toString(),cardForm.getBroj(),cardForm.getKod());
 			
 			
 			cardRepo.saveAndFlush(card);
@@ -123,6 +133,30 @@ public class Controller {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
+	}
+	
+	
+	@GetMapping("/getCard")
+	public ResponseEntity<CreditCard> getCard(@RequestHeader(value = HEADER_STRING) String token) {
+		try {
+
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+
+			User user = userRepo.findByEmail(email);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append(user.getIme());
+			sb.append(" ");
+			sb.append(user.getPrezime());
+			
+			CreditCard card = cardRepo.findByIme(sb.toString());
+
+			return new ResponseEntity<>(card, HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@PostMapping("/editUser")
