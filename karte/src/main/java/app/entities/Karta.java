@@ -14,7 +14,7 @@ public class Karta {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private String user;
+	private long user;
 	private Date date;
 	private long let;
 	private float price;
@@ -22,7 +22,7 @@ public class Karta {
 	public Karta() {
 	}
 	
-	public Karta(String user,Date date,long let,float price) {
+	public Karta(long user,Date date,long let,float price) {
 		super();
 		this.user = user;
 		this.date = date;
@@ -64,12 +64,12 @@ public class Karta {
 
 
 	
-	public String getUser() {
+	public long getUser() {
 		return user;
 	}
 
 
-	public void setUser(String user) {
+	public void setUser(long user) {
 		this.user = user;
 	}
 

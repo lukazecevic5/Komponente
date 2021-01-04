@@ -93,12 +93,12 @@ public class Controller {
 
 	}
 	
-	@GetMapping("/userName/{email}")
-	public ResponseEntity<String> userName(@PathVariable String email) {
+	@GetMapping("/userName/{id}")
+	public ResponseEntity<String> userName(@PathVariable long id) {
 		try {
 
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 
 			return new ResponseEntity<>(user.getIme(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -107,12 +107,12 @@ public class Controller {
 		}
 	}
 	
-	@GetMapping("/userSurname/{email}")
-	public ResponseEntity<String> userSurname(@PathVariable String email) {
+	@GetMapping("/userSurname/{id}")
+	public ResponseEntity<String> userSurname(@PathVariable long id) {
 		try {
 
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 
 			return new ResponseEntity<>(user.getPrezime(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -121,12 +121,12 @@ public class Controller {
 		}
 	}
 	
-	@GetMapping("/userRank/{email}")
-	public ResponseEntity<String> userRank(@PathVariable String email) {
+	@GetMapping("/userRank/{id}")
+	public ResponseEntity<String> userRank(@PathVariable long id) {
 		try {
 
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 
 			return new ResponseEntity<>(user.getRankic(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -135,12 +135,12 @@ public class Controller {
 		}
 	}
 	
-	@GetMapping("/userPass/{email}")
-	public ResponseEntity<Long> userPass(@PathVariable String email) {
+	@GetMapping("/userPass/{id}")
+	public ResponseEntity<Long> userPass(@PathVariable long id) {
 		try {
 
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 
 			return new ResponseEntity<>(user.getPasos(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -151,12 +151,12 @@ public class Controller {
 	
 	
 	
-	@GetMapping("/userMiles/{email}")
-	public ResponseEntity<Integer> userMiles(@PathVariable String email) {
+	@GetMapping("/userMiles/{id}")
+	public ResponseEntity<Integer> userMiles(@PathVariable long id) {
 		try {
 
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 
 			return new ResponseEntity<>(user.getMilje(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -165,12 +165,12 @@ public class Controller {
 		}
 	}
 	
-	@GetMapping("/addMiles/{email}/{miles}")
-	public ResponseEntity<String> userAddMiles(@PathVariable String email,@PathVariable int miles) {
+	@GetMapping("/addMiles/{id}/{miles}")
+	public ResponseEntity<String> userAddMiles(@PathVariable long id,@PathVariable int miles) {
 		try {
 
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 			
 			user.addPoints(miles);
 			
@@ -184,12 +184,12 @@ public class Controller {
 	}
 	
 	
-	@GetMapping("/updateRank/{email}")
-	public ResponseEntity<String> userUpdRank(@PathVariable String email) {
+	@GetMapping("/updateRank/{id}")
+	public ResponseEntity<String> userUpdRank(@PathVariable long id) {
 		try {
 
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 			
 			user.changeRank();
 			
@@ -203,7 +203,7 @@ public class Controller {
 	}
 	
 	@GetMapping("/whoAmI")
-	public ResponseEntity<String> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
+	public ResponseEntity<Long> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
 
 			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
@@ -211,7 +211,7 @@ public class Controller {
 
 			User user = userRepo.findByEmail(email);
 
-			return new ResponseEntity<>(user.getEmail(), HttpStatus.ACCEPTED);
+			return new ResponseEntity<>(user.getId(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -247,13 +247,13 @@ public class Controller {
 	}
 	
 	
-	@GetMapping("/getCard/{email}")
-	public ResponseEntity<Long> getCard(@PathVariable String email) {
+	@GetMapping("/getCard/{id}")
+	public ResponseEntity<Long> getCard(@PathVariable long id) {
 		try {
 
 			
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(user.getIme());
@@ -269,14 +269,14 @@ public class Controller {
 		}
 	}
 	
-	@PostMapping("/editUser/{email}")
-	public ResponseEntity<String> editUser(@RequestBody RegistrationForm registrationForm,@PathVariable String email) {
+	@PostMapping("/editUser/{id}")
+	public ResponseEntity<String> editUser(@RequestBody RegistrationForm registrationForm,@PathVariable long id) {
 
 		try {
 			
 			
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 			
 			user.setIme(registrationForm.getIme());
 			

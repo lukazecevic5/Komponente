@@ -4,14 +4,14 @@ import java.util.Date;
 
 public class KartaForm {
 
-	private String user;
+	private long user;
 	private long let;
 	
 	
-	public String getUser() {
+	public long getUser() {
 		return user;
 	}
-	public void setUser(String user) {
+	public void setUser(long user) {
 		this.user = user;
 	}
 	public long getLet() {

@@ -65,14 +65,14 @@ public class Controller {
 	}
 	
 	@GetMapping("/ticketUser/{id}")
-	public ResponseEntity<String> getticketUser(@PathVariable long id) {
+	public ResponseEntity<Long> getticketUser(@PathVariable long id) {
 		try {
 
 			Karta karta = karteRepo.findById(id);
 			
 			
 
-			return new ResponseEntity<String>(karta.getUser(), HttpStatus.ACCEPTED);
+			return new ResponseEntity<Long>(karta.getUser(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
