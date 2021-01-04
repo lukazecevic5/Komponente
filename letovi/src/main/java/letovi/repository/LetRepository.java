@@ -10,9 +10,10 @@ import letovi.entities.Let;
 @Repository
 public interface LetRepository extends JpaRepository<Let, Long> {
 	
-	List<Let> findByAvion(String avion);
+	List<Let> findByAvion(long avion);
 	List<Let> findByStartdest(String start_dest);
 	List<Let> findByEnddest(String end_dest);
 	List<Let> findByFlightlen(int flight_len);
 	List<Let>  findByPrice(float price);
+	Let findById(long id);
 }

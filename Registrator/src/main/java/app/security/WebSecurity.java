@@ -37,7 +37,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.cors().and().csrf().disable().authorizeRequests().antMatchers(LOGIN_PATH, REGISTRATION_PATH, CARD_PATH,EDIT_PROFILE_PATH,LOGINADM_PATH).permitAll()
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers(LOGIN_PATH, REGISTRATION_PATH, CARD_PATH,EDIT_PROFILE_PATH,LOGINADM_PATH,name,surname,rank,pass,miles,addMiles,updRank,getCard).permitAll()
 				.anyRequest().authenticated().and().addFilter(new JWTAuthenticationFilter(authenticationManager()))
 				.addFilter(new JWTAuthorizationFilter(authenticationManager(), userRepo)).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

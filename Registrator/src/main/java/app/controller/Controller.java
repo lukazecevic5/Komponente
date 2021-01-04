@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -91,6 +92,116 @@ public class Controller {
 		}
 
 	}
+	
+	@GetMapping("/userName/{email}")
+	public ResponseEntity<String> userName(@PathVariable String email) {
+		try {
+
+
+			User user = userRepo.findByEmail(email);
+
+			return new ResponseEntity<>(user.getIme(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/userSurname/{email}")
+	public ResponseEntity<String> userSurname(@PathVariable String email) {
+		try {
+
+
+			User user = userRepo.findByEmail(email);
+
+			return new ResponseEntity<>(user.getPrezime(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/userRank/{email}")
+	public ResponseEntity<String> userRank(@PathVariable String email) {
+		try {
+
+
+			User user = userRepo.findByEmail(email);
+
+			return new ResponseEntity<>(user.getRankic(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/userPass/{email}")
+	public ResponseEntity<Long> userPass(@PathVariable String email) {
+		try {
+
+
+			User user = userRepo.findByEmail(email);
+
+			return new ResponseEntity<>(user.getPasos(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	
+	@GetMapping("/userMiles/{email}")
+	public ResponseEntity<Integer> userMiles(@PathVariable String email) {
+		try {
+
+
+			User user = userRepo.findByEmail(email);
+
+			return new ResponseEntity<>(user.getMilje(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/addMiles/{email}/{miles}")
+	public ResponseEntity<String> userAddMiles(@PathVariable String email,@PathVariable int miles) {
+		try {
+
+
+			User user = userRepo.findByEmail(email);
+			
+			user.addPoints(miles);
+			
+			userRepo.saveAndFlush(user);
+
+			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	@GetMapping("/updateRank/{email}")
+	public ResponseEntity<String> userUpdRank(@PathVariable String email) {
+		try {
+
+
+			User user = userRepo.findByEmail(email);
+			
+			user.changeRank();
+			
+			userRepo.saveAndFlush(user);
+
+			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping("/whoAmI")
 	public ResponseEntity<String> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
@@ -100,7 +211,7 @@ public class Controller {
 
 			User user = userRepo.findByEmail(email);
 
-			return new ResponseEntity<>(user.getIme() + " " + user.getPrezime(), HttpStatus.ACCEPTED);
+			return new ResponseEntity<>(user.getEmail(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -136,12 +247,11 @@ public class Controller {
 	}
 	
 	
-	@GetMapping("/getCard")
-	public ResponseEntity<CreditCard> getCard(@RequestHeader(value = HEADER_STRING) String token) {
+	@GetMapping("/getCard/{email}")
+	public ResponseEntity<Long> getCard(@PathVariable String email) {
 		try {
 
-			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
-					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			
 
 			User user = userRepo.findByEmail(email);
 			
@@ -152,20 +262,19 @@ public class Controller {
 			
 			CreditCard card = cardRepo.findByIme(sb.toString());
 
-			return new ResponseEntity<>(card, HttpStatus.ACCEPTED);
+			return new ResponseEntity<Long>(card.getId(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@PostMapping("/editUser")
-	public ResponseEntity<String> editUser(@RequestBody RegistrationForm registrationForm,@RequestHeader(value = HEADER_STRING) String token) {
+	@PostMapping("/editUser/{email}")
+	public ResponseEntity<String> editUser(@RequestBody RegistrationForm registrationForm,@PathVariable String email) {
 
 		try {
 			
-			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
-					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			
 
 			User user = userRepo.findByEmail(email);
 			

@@ -2,15 +2,15 @@ package letovi.forms;
 
 public class LetForm {
 	
-	private String avion;
+	private long avion;
 	private String start_dest;
 	private String end_dest;
 	private int flight_len;
 	private float price;
-	public String getAvion() {
+	public long getAvion() {
 		return avion;
 	}
-	public void setAvion(String avion) {
+	public void setAvion(long avion) {
 		this.avion = avion;
 	}
 	public String getStart_dest() {

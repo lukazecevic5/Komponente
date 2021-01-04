@@ -29,6 +29,10 @@ public class CreditCard {
 		this.kod = kod;
 	}
 	
+	public long getId() {
+		return id;
+	}
+	
 	
 	public String getIme() {
 		return ime;

@@ -20,31 +20,49 @@ public class Let {
 		this.id = id;
 	}
 
-	private String avion;
+	private long avion;
 	private String startdest;
 	private String enddest;
 	private int flightlen;
 	private float price;
+	private int seatsLeft;
 	
 	public Let() {
 	
 	}
 
-	public Let(String avion, String start_dest, String end_dest, int flight_len, float price) {
+	public Let(long avion, String start_dest, String end_dest, int flight_len, float price,int seatsLeft) {
 		super();
 		this.avion = avion;
 		this.startdest = start_dest;
 		this.enddest = end_dest;
 		this.flightlen = flight_len;
 		this.price = price;
+		this.seatsLeft = seatsLeft;
+	}
+	
+	public boolean bookTicket() {
+		if(seatsLeft-1>=0) {
+			seatsLeft--;
+			return true;
+		}
+		return false;
 	}
 
 	
-	public String getAvion() {
+	public int getSeatsLeft() {
+		return seatsLeft;
+	}
+
+	public void setSeatsLeft(int seatsLeft) {
+		this.seatsLeft = seatsLeft;
+	}
+
+	public long getAvion() {
 		return avion;
 	}
 
-	public void setAvion(String avion) {
+	public void setAvion(long avion) {
 		this.avion = avion;
 	}
 
