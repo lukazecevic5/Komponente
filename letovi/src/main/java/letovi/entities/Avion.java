@@ -60,4 +60,10 @@ public class Avion {
 	public void cancelPassenget(int passenger) {
 		this.capacity+= passenger;
 	}
+	
+	@Override
+	public String toString() {
+		
+		return id + "Avion | ime : " + ime + " | kapacitet : " + capacity;
+	}
 }

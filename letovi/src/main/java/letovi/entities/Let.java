@@ -98,4 +98,10 @@ public class Let {
 		this.price = price;
 	}
 	
+	@Override
+	public String toString() {
+		
+		return id + " Let | Avionom " + avion + " | od " + startdest + " ka " + enddest + " | duzine: " + flightlen + " | cene: " + price + " | ostala sedista: " + seatsLeft ;
+	}
+	
 }

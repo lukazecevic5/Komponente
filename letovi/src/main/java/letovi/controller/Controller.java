@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import letovi.entities.Avion;
 import letovi.entities.Let;
+import letovi.forms.AdminForm;
 import letovi.forms.LetForm;
 import letovi.forms.PlaneForm;
 import letovi.repository.AvionRepository;
 import letovi.repository.LetRepository;
+import letovi.utils.UtilsMethods;
 
 @RestController
 @RequestMapping("")
@@ -36,6 +38,37 @@ public class Controller  {
 		this.rep = letRep;
 		this.avRep = avRep;
 	}
+	
+	@GetMapping("/getFlight/{id}")
+	public ResponseEntity<String> getFlightbyId(@PathVariable long id) {
+		try {
+
+			Let let = rep.findById(id);
+			
+			
+			
+			return new ResponseEntity<String>(let.toString(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/getPlane/{id}")
+	public ResponseEntity<String> getPlanebyId(@PathVariable long id) {
+		try {
+
+			Avion avion = avRep.findById(id);
+			
+			
+			
+			return new ResponseEntity<String>(avion.toString(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping("/flightsByPlane/{plane}")
 	public ResponseEntity<List<Long>> getFlightsbyPlane(@PathVariable long plane) {
 		try {
@@ -298,27 +331,47 @@ public class Controller  {
 		}
 	}
 	
-	@PostMapping("/addPlane")
-	public ResponseEntity<String> addPlane(@RequestBody PlaneForm planeForm) {
+	@PostMapping("/addPlane/{username}/{password}")
+	public ResponseEntity<String> addPlane(@RequestBody PlaneForm planeForm,@PathVariable String username,@PathVariable String password) {
 
 		try {
+			
+			AdminForm form = new AdminForm();
+			
+			form.setUsername(username);
+			form.setPassword(password);
+			
+			ResponseEntity<String> response = UtilsMethods.sendPostStr("http://localhost:8080/loginAsAdmin", form);
+			
+			if (response.getStatusCode()==HttpStatus.ACCEPTED) {
 			
 			Avion avion = new Avion(planeForm.getIme(), planeForm.getCapacity());
 			
 			avRep.saveAndFlush(avion);
-			
-
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+			}
+
+			return new ResponseEntity<>("not valid", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 	}
-	@PostMapping("/addFlight")
-	public ResponseEntity<String> addFlight(@RequestBody LetForm flightForm) {
+	@PostMapping("/addFlight/{username}/{password}")
+	public ResponseEntity<String> addFlight(@RequestBody LetForm flightForm,@PathVariable String username,@PathVariable String password) {
 
 		try {
+			
+
+			AdminForm form = new AdminForm();
+			
+			form.setUsername(username);
+			form.setPassword(password);
+			
+			ResponseEntity<String> response = UtilsMethods.sendPostStr("http://localhost:8080/loginAsAdmin", form);
+			
+			if (response.getStatusCode()==HttpStatus.ACCEPTED) {
 			
 			Avion a = avRep.findById(flightForm.getAvion());
 			
@@ -331,38 +384,59 @@ public class Controller  {
 			
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+			}
+			return new ResponseEntity<>("not valid", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 	}
-	@DeleteMapping("/removePlane/{id}")
-	public ResponseEntity<String> removePlane(@PathVariable long id) {
+	@DeleteMapping("/removePlane/{id}/{username}/{password}")
+	public ResponseEntity<String> removePlane(@PathVariable long id,@PathVariable String username,@PathVariable String password) {
 
 		try {
+			AdminForm form = new AdminForm();
 			
+			form.setUsername(username);
+			form.setPassword(password);
+			
+			ResponseEntity<String> response = UtilsMethods.sendPostStr("http://localhost:8080/loginAsAdmin", form);
+			
+			if (response.getStatusCode()==HttpStatus.ACCEPTED) {
 			avRep.deleteById(id);
 			
 			
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+			}
+			return new ResponseEntity<>("not valid", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 	}
-	@DeleteMapping("/removeFlight/{id}")
-	public ResponseEntity<String> removeFlight(@PathVariable long id) {
+	@DeleteMapping("/removeFlight/{id}/{username}/{password}")
+	public ResponseEntity<String> removeFlight(@PathVariable long id,@PathVariable String username,@PathVariable String password) {
 
 		try {
 			
+			AdminForm form = new AdminForm();
+			
+			form.setUsername(username);
+			form.setPassword(password);
+			
+			ResponseEntity<String> response = UtilsMethods.sendPostStr("http://localhost:8080/loginAsAdmin", form);
+			
+			if (response.getStatusCode()==HttpStatus.ACCEPTED) {
 			rep.deleteById(id);
 			
 			
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+			}
+			return new ResponseEntity<>("not valid", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

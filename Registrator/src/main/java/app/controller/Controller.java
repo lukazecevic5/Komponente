@@ -83,9 +83,12 @@ public class Controller {
 		try {
 			
 			
-			adminRepo.existsByUsername(form.getUsername());
-			adminRepo.existsByPassword(form.getPassword());
-			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+			if (adminRepo.existsByUsername(form.getUsername())) {
+				if (adminRepo.existsByPassword(form.getPassword())) {
+					return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+				}
+			}
+			return new ResponseEntity<>("bad", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -218,14 +221,13 @@ public class Controller {
 		}
 	}
 	
-	@PostMapping("/addCard")
-	public ResponseEntity<String> addCard(@RequestBody CardForm cardForm,@RequestHeader(value = HEADER_STRING) String token) {
+	@PostMapping("/addCard/{id}")
+	public ResponseEntity<String> addCard(@RequestBody CardForm cardForm,@PathVariable long id) {
 
 		try {
-			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
-					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			
 
-			User user = userRepo.findByEmail(email);
+			User user = userRepo.findById(id);
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(user.getIme());
