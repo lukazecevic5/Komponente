@@ -1,7 +1,10 @@
 package app.view;
 
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,11 +18,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class RegistrationFrame extends JFrame{
+public class RegistrationFrame extends JFrame implements ActionListener{
 	
 	public static void main(String[] args) {
 		new RegistrationFrame();
 	}
+	
 	
 	private JLabel ime; 
     private JLabel prezime;
@@ -41,8 +45,6 @@ public class RegistrationFrame extends JFrame{
     private JTextField sifraTF; 
     private JComboBox month; 
     private JComboBox year; 
-    private JLabel add; 
-    private JTextArea tadd; 
     private JCheckBox term; 
     private JButton sub; 
     private JButton reset; 
@@ -50,30 +52,13 @@ public class RegistrationFrame extends JFrame{
     private JLabel res; 
     private JTextArea resadd; 
   
-    private String dates[] 
-        = { "1", "2", "3", "4", "5", 
-            "6", "7", "8", "9", "10", 
-            "11", "12", "13", "14", "15", 
-            "16", "17", "18", "19", "20", 
-            "21", "22", "23", "24", "25", 
-            "26", "27", "28", "29", "30", 
-            "31" }; 
-    private String months[] 
-        = { "Jan", "feb", "Mar", "Apr", 
-            "May", "Jun", "July", "Aug", 
-            "Sup", "Oct", "Nov", "Dec" }; 
-    private String years[] 
-        = { "1995", "1996", "1997", "1998", 
-            "1999", "2000", "2001", "2002", 
-            "2003", "2004", "2005", "2006", 
-            "2007", "2008", "2009", "2010", 
-            "2011", "2012", "2013", "2014", 
-            "2015", "2016", "2017", "2018", 
-            "2019" }; 
     
     public RegistrationFrame() {
     	setTitle("Registration Form"); 
-        setBounds(300, 90, 900, 600); 
+    	setFont(new Font("Corbel",Font.BOLD,40));
+        setBounds(300, 90, 900, 600);
+        setPreferredSize(new Dimension(100, 300));
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE); 
         setResizable(false); 
   
@@ -81,105 +66,112 @@ public class RegistrationFrame extends JFrame{
         c.setLayout(null); 
   
         title = new JLabel("Registracija naloga"); 
-        title.setFont(new Font("Arial", Font.PLAIN, 30)); 
+        title.setFont(new Font("Corbel", Font.PLAIN, 30)); 
+        title.setForeground(Color.WHITE);
         title.setSize(300, 30); 
         title.setLocation(300, 30); 
         c.add(title); 
   
         ime = new JLabel("Ime:"); 
-        ime.setFont(new Font("Arial", Font.PLAIN, 20)); 
+        ime.setFont(new Font("Corbel", Font.PLAIN, 20));
+        ime.setForeground(Color.WHITE);
         ime.setSize(100, 20); 
         ime.setLocation(250, 100); 
         c.add(ime); 
   
         tname = new JTextField(); 
-        tname.setFont(new Font("Arial", Font.PLAIN, 15)); 
+        tname.setFont(new Font("Corbel", Font.PLAIN, 15)); 
         tname.setSize(190, 20); 
         tname.setLocation(350, 100); 
         c.add(tname); 
   
         prezime = new JLabel("Prezime:"); 
-        prezime.setFont(new Font("Arial", Font.PLAIN, 20)); 
+        prezime.setFont(new Font("Corbel", Font.PLAIN, 20)); 
+        prezime.setForeground(Color.WHITE);
         prezime.setSize(100, 20); 
         prezime.setLocation(250, 150); 
         c.add(prezime); 
   
         tmno = new JTextField(); 
-        tmno.setFont(new Font("Arial", Font.PLAIN, 15)); 
+        tmno.setFont(new Font("Corbel", Font.PLAIN, 15)); 
         tmno.setSize(190, 20); 
         tmno.setLocation(350, 150); 
         c.add(tmno); 
   
         brojPasosa = new JLabel("Pasos:"); 
-        brojPasosa.setFont(new Font("Arial", Font.PLAIN, 20)); 
+        brojPasosa.setFont(new Font("Corbel", Font.PLAIN, 20)); 
+        brojPasosa.setForeground(Color.WHITE);
         brojPasosa.setSize(100, 20); 
         brojPasosa.setLocation(250, 200); 
         c.add(brojPasosa); 
   
         brojPasosaTF = new JTextField(); 
-        brojPasosaTF.setFont(new Font("Arial", Font.PLAIN, 15)); 
+        brojPasosaTF.setFont(new Font("Corbel", Font.PLAIN, 15)); 
         brojPasosaTF.setSize(190, 20); 
         brojPasosaTF.setLocation(350, 200); 
         c.add(brojPasosaTF); 
   
 
         sifra = new JLabel("Sifra:"); 
-        sifra.setFont(new Font("Arial", Font.PLAIN, 20)); 
+        sifra.setFont(new Font("Corbel", Font.PLAIN, 20)); 
+        sifra.setForeground(Color.WHITE);
         sifra.setSize(100, 20); 
         sifra.setLocation(250, 250); 
         c.add(sifra); 
   
         sifraTF = new JTextField(); 
-        sifraTF.setFont(new Font("Arial", Font.PLAIN, 15)); 
+        sifraTF.setFont(new Font("Corbel", Font.PLAIN, 15)); 
         sifraTF.setSize(190, 20); 
         sifraTF.setLocation(350, 250); 
         c.add(sifraTF); 
   
 
-        sub = new JButton("Submit:"); 
-        sub.setFont(new Font("Arial", Font.PLAIN, 15)); 
+        sub = new JButton("Submit"); 
+        sub.setFont(new Font("Corbel", Font.PLAIN, 15));
+        sub.setBackground(Color.WHITE);
         sub.setSize(100, 20); 
         sub.setLocation(250, 350); 
-        sub.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				
-			}
-		}); 
+
         c.add(sub); 
   
         reset = new JButton("Reset"); 
-        reset.setFont(new Font("Arial", Font.PLAIN, 15)); 
+        reset.setFont(new Font("Corbel", Font.PLAIN, 15)); 
+        reset.setBackground(Color.WHITE);
         reset.setSize(100, 20); 
         reset.setLocation(370, 350); 
-        reset.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				
-			}
-		}); 
+
         c.add(reset); 
         
         cancel = new JButton("Cancel"); 
-        cancel.setFont(new Font("Arial", Font.PLAIN, 15)); 
+        cancel.setFont(new Font("Corbel", Font.PLAIN, 15)); 
+        cancel.setBackground(Color.WHITE);
         cancel.setSize(100, 20); 
         cancel.setLocation(490, 350); 
-        cancel.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				
-			}
-		}); 
-        c.add(cancel); 
-  
 
-  
+        c.add(cancel); 
+
+        sub.addActionListener(this);
+		cancel.addActionListener(this);
+		reset.addActionListener(this);
+		
+		this.getContentPane().setBackground(Color.DARK_GRAY);
         setVisible(true); 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==cancel) {
+			
+		}
+		else if(e.getSource()==sub) {
+			
+		}
+		else {
+			String def = ""; 
+            tname.setText(def); 
+            brojPasosaTF.setText(def); 
+            tmno.setText(def); 
+            sifraTF.setText(def); 
+		}
 	}
 }
