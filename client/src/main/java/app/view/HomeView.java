@@ -51,7 +51,24 @@ public class HomeView extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose(); 
+				dispose();
+				new RegistrationFrame();
+				
+			}
+		});
+		
+		loginAdmin.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				AdminLogIn admlog = new AdminLogIn();
+				admlog.setTitle("Admin Login Form");
+				admlog.setLocationRelativeTo(null);
+				admlog.setVisible(true);
+				admlog.setSize(new Dimension(370,600));
+				admlog.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				admlog.setResizable(false);
 				
 			}
 		});
