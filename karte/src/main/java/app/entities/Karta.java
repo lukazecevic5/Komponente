@@ -31,7 +31,10 @@ public class Karta {
 	}
 	
 	
-
+	@Override
+	public String toString() {
+		return id  + " Karta | " + "Let: " + let + " | cena: " + price;
+	}
 	
 	public float getPrice() {
 		return price;

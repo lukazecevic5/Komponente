@@ -30,8 +30,8 @@ public class Controller {
 		this.karteRepo = karteRepo;
 	}
 	
-	@PostMapping("/buyKarta")
-	public ResponseEntity<String> buyKarta(@RequestBody KartaForm kartaForm) {
+	@PostMapping("/buyKarta/{idCard}")
+	public ResponseEntity<String> buyKarta(@RequestBody KartaForm kartaForm,@PathVariable long idCard) {
 
 		try {
 			ResponseEntity<Boolean> canBoard  = UtilsMethods.sendGetBool("http://localhost:8081/flightCanBoard/" + kartaForm.getLet());
@@ -48,6 +48,7 @@ public class Controller {
 			else if(rank.equals("GOLD")) {
 				price*=0.8;
 			}
+			ResponseEntity<String> paid = UtilsMethods.sendGetStr("http://localhost:8080/pay/" + idCard+"/"+ price);
 			ResponseEntity<Integer> milesRes = UtilsMethods.sendGetInt("http://localhost:8081/flightLen/" + kartaForm.getLet());
 			int miles = milesRes.getBody();
 			UtilsMethods.sendGetStr("http://localhost:8080/addMiles/" + kartaForm.getUser() + "/" + miles);
@@ -125,18 +126,18 @@ public class Controller {
 	}
 	
 	@GetMapping("/tickets/{user}")
-	public ResponseEntity<List<Long>> getFlightsbyLen(@PathVariable String user) {
+	public ResponseEntity<List<String>> getFlightsbyLen(@PathVariable String user) {
 		try {
 
 			List<Karta> tmp = karteRepo.findAllByUserOrderByDateDesc(user);
 			
-			List<Long> karte = new ArrayList<Long>();
+			List<String> karte = new ArrayList<String>();
 			
 			for (Karta k : tmp) {
-				karte.add(k.getId());
+				karte.add(k.toString());
 			}
 
-			return new ResponseEntity<List<Long>>(karte, HttpStatus.ACCEPTED);
+			return new ResponseEntity<List<String>>(karte, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

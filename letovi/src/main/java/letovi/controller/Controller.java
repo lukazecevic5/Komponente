@@ -301,6 +301,25 @@ public class Controller  {
 		}
 	}
 	
+	@GetMapping("/getFlights")
+	public ResponseEntity<List<Long>> getFlights() {
+		try {
+
+			List<Let> tmp = rep.findAll();
+			
+			List<Long> letovi = new ArrayList<Long>();
+			
+			for (Let a : tmp) {
+				letovi.add(a.getId());
+			}
+
+			return new ResponseEntity<List<Long>>(letovi, HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping("/PlaneName/{id}")
 	public ResponseEntity<String> getPlaneName(@PathVariable long id) {
 		try {
@@ -392,7 +411,7 @@ public class Controller  {
 		}
 
 	}
-	@DeleteMapping("/removePlane/{id}/{username}/{password}")
+	@GetMapping("/removePlane/{id}/{username}/{password}")
 	public ResponseEntity<String> removePlane(@PathVariable long id,@PathVariable String username,@PathVariable String password) {
 
 		try {
@@ -404,7 +423,15 @@ public class Controller  {
 			ResponseEntity<String> response = UtilsMethods.sendPostStr("http://localhost:8080/loginAsAdmin", form);
 			
 			if (response.getStatusCode()==HttpStatus.ACCEPTED) {
-			avRep.deleteById(id);
+				
+				ResponseEntity<List<Long>> flights = UtilsMethods.sendGetLs("http://localhost:8081/flightsByPlane/" + id);
+				if (flights.getBody()!=null)
+					for (long a : flights.getBody()) {
+						ResponseEntity<String> resRemF = UtilsMethods.sendGetStr("http://localhost:8081/removeFlight/" + a + "/" + username + "/" + password);
+					}
+				
+				
+				avRep.deleteById(id);
 			
 			
 
@@ -417,7 +444,7 @@ public class Controller  {
 		}
 
 	}
-	@DeleteMapping("/removeFlight/{id}/{username}/{password}")
+	@GetMapping("/removeFlight/{id}/{username}/{password}")
 	public ResponseEntity<String> removeFlight(@PathVariable long id,@PathVariable String username,@PathVariable String password) {
 
 		try {

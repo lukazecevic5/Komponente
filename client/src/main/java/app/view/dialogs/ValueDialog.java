@@ -11,6 +11,11 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 
+import org.springframework.http.ResponseEntity;
+
+import app.utils.HttpManager;
+import app.utils.UtilsMethods;
+
 public class ValueDialog extends JDialog {
 	
 	public ValueDialog(long idUser,String parameter) {
@@ -18,7 +23,13 @@ public class ValueDialog extends JDialog {
 		JComboBox<String> planes;
 		JButton ok = new JButton("OK");
 		planes = new JComboBox<String>();
-		//populate planes
+		String path = HttpManager.getSelectedPath("service-letovi");
+		ResponseEntity<List<Long>> responsePlanes = UtilsMethods.sendGetLs(path+"getPlanes");
+		
+		for (long a : responsePlanes.getBody()) {
+			ResponseEntity<String> responsePlane = UtilsMethods.sendGetStr(path+"getPlane/"+ a );
+			planes.addItem(responsePlane.getBody());
+		}
 		
 		ok.addActionListener(new ActionListener() {
 			
@@ -27,29 +38,35 @@ public class ValueDialog extends JDialog {
 				
 				String value = txt.getText();
 				List<String> flights = new ArrayList<String>();
-				List<Long> resp = new ArrayList<Long>();
+				ResponseEntity<List<Long>> flightsRes;
 
 				if(parameter.equals("Plane")) {
-					long idPlane = Long.parseLong(value);
+					String selected = (String) planes.getSelectedItem();
+					String arr[] = selected.split(" ");
+					long idSel = Long.parseLong(arr[0]);
+					flightsRes = UtilsMethods.sendGetLs(path+"flightsByPlane/"+idSel);
 					
 				}
 				else if(parameter.equals("StartDest")) {
-					//value
+					flightsRes = UtilsMethods.sendGetLs(path+"flightsByStartDest/"+value);
 					
 				}
 				else if(parameter.equals("EndDest")) {
-					//value
+					flightsRes = UtilsMethods.sendGetLs(path+"flightsByEndDest/"+value);
 					
 				}
 				else if(parameter.equals("Len")) {
 					int len = Integer.parseInt(value);
+					flightsRes = UtilsMethods.sendGetLs(path+"flightsByLen/"+len);
 				}
-				else if(parameter.equals("Price")) {
+				else{
 					float price = Float.parseFloat(value);
+					flightsRes = UtilsMethods.sendGetLs(path+"flightsByPrice/"+price);
 					
 				}
-				for (long long1 : resp) {
-					//pravimoStringove i stavljamo u flights
+				for (long f : flightsRes.getBody()) {
+					ResponseEntity<String> flightRes = UtilsMethods.sendGetStr(path+"getFlight/"+f);
+					flights.add(flightRes.getBody());
 				}
 				new BuyTicketDialog(idUser, flights);
 				dispose();

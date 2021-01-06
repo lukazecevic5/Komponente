@@ -64,6 +64,6 @@ public class Avion {
 	@Override
 	public String toString() {
 		
-		return id + "Avion | ime : " + ime + " | kapacitet : " + capacity;
+		return id + " Avion | ime : " + ime + " | kapacitet : " + capacity;
 	}
 }

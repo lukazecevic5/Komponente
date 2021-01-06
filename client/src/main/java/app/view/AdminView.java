@@ -20,7 +20,7 @@ public class AdminView extends JFrame {
 	JButton addFlight;
 	JButton removeFlight;
 	
-	public AdminView() {
+	public AdminView(String username,String password) {
 		addPlane = new  JButton("Add Plane");
 		removePlane = new JButton("Remove Plane");
 		addFlight = new JButton("Add Flight");
@@ -30,7 +30,7 @@ public class AdminView extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new AddPlaneDialog();
+				new AddPlaneDialog(username,password);
 				
 			}
 		});
@@ -39,7 +39,7 @@ public class AdminView extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new RemovePlaneDialog();
+				new RemovePlaneDialog(username,password);
 				
 			}
 		});
@@ -48,7 +48,7 @@ public class AdminView extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new AddFlightDialog();
+				new AddFlightDialog(username,password);
 				
 			}
 		});
@@ -57,7 +57,7 @@ public class AdminView extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new RemoveFlightDialog();
+				new RemoveFlightDialog(username,password);
 				
 			}
 		});

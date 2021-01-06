@@ -9,7 +9,14 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import app.forms.CardForm;
+import app.forms.KartaForm;
+import app.utils.HttpManager;
+import app.utils.UtilsMethods;
+import app.view.OptionDialog;
 
 public class AddCardDialog extends JDialog {
 	
@@ -17,7 +24,7 @@ public class AddCardDialog extends JDialog {
 	JTextField brojT,kodT;
 	JButton add;
 	
-	public AddCardDialog(long idUser) {
+	public AddCardDialog(KartaForm kartaForm) {
 		broj = new JLabel("Broj");
 		kod = new JLabel("Kod");
 		brojT = new JTextField();
@@ -31,9 +38,15 @@ public class AddCardDialog extends JDialog {
 				CardForm form = new CardForm();
 				form.setBroj(Integer.parseInt(brojT.getText()));
 				form.setKod(Integer.parseInt(kodT.getText()));
-				//posalji
-				
-				dispose();
+				String path = HttpManager.getSelectedPath("service-registrator");
+				ResponseEntity<String> res = UtilsMethods.sendPostStr(path+"addCard/"+kartaForm.getUser(), form);
+				if (res.getStatusCode()==HttpStatus.ACCEPTED) {
+					dispose();
+					new PickCardDialog(kartaForm);
+				}
+				else {
+					new OptionDialog();
+				}
 				
 			}
 		});

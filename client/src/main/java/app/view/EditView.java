@@ -4,20 +4,10 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +16,9 @@ import app.forms.RegistrationForm;
 import app.utils.HttpManager;
 import app.utils.UtilsMethods;
 
-public class RegistrationFrame extends JFrame implements ActionListener{
-	
-	
-	
-	
+public class EditView extends JFrame implements ActionListener{
+
+
 	private JLabel ime; 
     private JLabel prezime;
     private JLabel pasos;
@@ -57,10 +45,13 @@ public class RegistrationFrame extends JFrame implements ActionListener{
     private JButton reset; 
     private JTextArea tout; 
     private JLabel res; 
-    private JTextArea resadd; 
+    private JTextArea resadd;
+    private long idUser;
+    String path = HttpManager.getSelectedPath("service-registrator");
   
     
-    public RegistrationFrame() {
+    public EditView(long id) {
+    	this.idUser = id;
     	setTitle("Registration Form"); 
     	setFont(new Font("Corbel",Font.BOLD,40));
         setBounds(300, 90, 900, 600);
@@ -72,7 +63,7 @@ public class RegistrationFrame extends JFrame implements ActionListener{
         c = getContentPane(); 
         c.setLayout(null); 
   
-        title = new JLabel("Registracija naloga"); 
+        title = new JLabel("Uredjivanje naloga"); 
         title.setFont(new Font("Corbel", Font.PLAIN, 30)); 
         title.setForeground(Color.WHITE);
         title.setSize(300, 30); 
@@ -86,12 +77,14 @@ public class RegistrationFrame extends JFrame implements ActionListener{
         ime.setLocation(250, 100); 
         c.add(ime); 
   
-        tname = new JTextField(); 
+        ResponseEntity<String> resIme = UtilsMethods.sendGetStr(path+"userName/"+id);
+        tname = new JTextField(resIme.getBody()); 
         tname.setFont(new Font("Corbel", Font.PLAIN, 15)); 
         tname.setSize(239, 20); 
         tname.setLocation(350, 100); 
         c.add(tname); 
   
+        
         prezime = new JLabel("Prezime:"); 
         prezime.setFont(new Font("Corbel", Font.PLAIN, 20)); 
         prezime.setForeground(Color.WHITE);
@@ -99,12 +92,15 @@ public class RegistrationFrame extends JFrame implements ActionListener{
         prezime.setLocation(250, 150); 
         c.add(prezime); 
   
-        tmno = new JTextField(); 
+        ResponseEntity<String> resPrez = UtilsMethods.sendGetStr(path+"userSurname/"+id);
+        tmno = new JTextField(resPrez.getBody()); 
         tmno.setFont(new Font("Corbel", Font.PLAIN, 15)); 
         tmno.setSize(239, 20); 
         tmno.setLocation(350, 150); 
         c.add(tmno); 
   
+        
+        ResponseEntity<String> resPass = UtilsMethods.sendGetStr(path+"userPass/"+id);
         brojPasosa = new JLabel("Pasos:"); 
         brojPasosa.setFont(new Font("Corbel", Font.PLAIN, 20)); 
         brojPasosa.setForeground(Color.WHITE);
@@ -112,26 +108,15 @@ public class RegistrationFrame extends JFrame implements ActionListener{
         brojPasosa.setLocation(250, 200); 
         c.add(brojPasosa); 
   
-        brojPasosaTF = new JTextField(); 
+        brojPasosaTF = new JTextField(resPass.getBody()); 
         brojPasosaTF.setFont(new Font("Corbel", Font.PLAIN, 15)); 
         brojPasosaTF.setSize(239, 20); 
         brojPasosaTF.setLocation(350, 200); 
         c.add(brojPasosaTF); 
   
-
-        sifra = new JLabel("Sifra:"); 
-        sifra.setFont(new Font("Corbel", Font.PLAIN, 20)); 
-        sifra.setForeground(Color.WHITE);
-        sifra.setSize(100, 20); 
-        sifra.setLocation(250, 250); 
-        c.add(sifra); 
   
-        sifraTF = new JPasswordField(); 
-        sifraTF.setFont(new Font("Corbel", Font.PLAIN, 15)); 
-        sifraTF.setSize(239, 20); 
-        sifraTF.setLocation(350, 250); 
-        c.add(sifraTF); 
-  
+        ResponseEntity<String> resEmail = UtilsMethods.sendGetStr(path+"userMail/"+id);
+        
         email = new JLabel("Email:"); 
         email.setFont(new Font("Corbel", Font.PLAIN, 20)); 
         email.setForeground(Color.WHITE);
@@ -139,7 +124,7 @@ public class RegistrationFrame extends JFrame implements ActionListener{
         email.setLocation(250, 300); 
         c.add(email); 
   
-        emailtf = new JTextField(); 
+        emailtf = new JTextField(resEmail.getBody()); 
         emailtf.setFont(new Font("Corbel", Font.PLAIN, 15)); 
         emailtf.setSize(239, 20); 
         emailtf.setLocation(350, 300); 
@@ -183,7 +168,6 @@ public class RegistrationFrame extends JFrame implements ActionListener{
 		if(e.getSource()==cancel) {
 			
 			dispose();
-			new HomeView();
 			
 		}
 		else if(e.getSource()==sub) {
@@ -195,11 +179,10 @@ public class RegistrationFrame extends JFrame implements ActionListener{
 			form.setEmail(emailtf.getText());
 			form.setPassword(sifraTF.getText());
 			form.setPasos(Long.parseLong(brojPasosaTF.getText()));
-			String path = HttpManager.getSelectedPath("service-registrator");
-			ResponseEntity<String> response = UtilsMethods.sendPostStr(path + "register", form);
+			ResponseEntity<String> response = UtilsMethods.sendPostStr(path + "editUser/"+idUser, form);
 			if (response.getStatusCode()==HttpStatus.ACCEPTED) {
 				dispose();
-				new HomeView();
+				new OptionDialog("Uspesno promenjeno");
 			}
 			else {
 				new OptionDialog();
@@ -217,4 +200,7 @@ public class RegistrationFrame extends JFrame implements ActionListener{
             sifraTF.setText(def); 
 		}
 	}
+	
+	
+	
 }

@@ -4,8 +4,6 @@ import static app.security.SecurityConstants.HEADER_STRING;
 import static app.security.SecurityConstants.SECRET;
 import static app.security.SecurityConstants.TOKEN_PREFIX;
 
-import java.util.Properties;
-
 import java.util.*;
 
 import javax.mail.Message;
@@ -110,8 +108,36 @@ public class Controller {
 		}
 	}
 	
+	@GetMapping("/userMail/{id}")
+	public ResponseEntity<String> userMail(@PathVariable long id) {
+		try {
+
+
+			User user = userRepo.findById(id);
+
+			return new ResponseEntity<>(user.getEmail(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping("/userSurname/{id}")
 	public ResponseEntity<String> userSurname(@PathVariable long id) {
+		try {
+
+
+			User user = userRepo.findById(id);
+
+			return new ResponseEntity<>(user.getPrezime(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/userPasw/{id}")
+	public ResponseEntity<String> userPassw(@PathVariable long id) {
 		try {
 
 
@@ -234,7 +260,10 @@ public class Controller {
 			sb.append(" ");
 			sb.append(user.getPrezime());
 			
-			CreditCard card = new CreditCard(sb.toString(),cardForm.getBroj(),cardForm.getKod());
+			if (cardForm.getKod()>999 || cardForm.getKod()<100)
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+			CreditCard card = new CreditCard(sb.toString(),cardForm.getBroj(),cardForm.getKod(),user.getId());
 			
 			
 			cardRepo.saveAndFlush(card);
@@ -248,23 +277,47 @@ public class Controller {
 
 	}
 	
-	
-	@GetMapping("/getCard/{id}")
-	public ResponseEntity<Long> getCard(@PathVariable long id) {
+	@GetMapping("/pay/{id}/{price}")
+	public ResponseEntity<String> pay(@PathVariable long id,@PathVariable float price) {
 		try {
 
 			
 
-			User user = userRepo.findById(id);
 			
-			StringBuilder sb = new StringBuilder();
-			sb.append(user.getIme());
-			sb.append(" ");
-			sb.append(user.getPrezime());
 			
-			CreditCard card = cardRepo.findByIme(sb.toString());
+			
+			CreditCard card = cardRepo.findById(id);
+			
+			//ovde placa
 
-			return new ResponseEntity<Long>(card.getId(), HttpStatus.ACCEPTED);
+			return new ResponseEntity<String>("payed", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	@GetMapping("/getCards/{id}")
+	public ResponseEntity<List<String>> getCard(@PathVariable long id) {
+		try {
+
+			
+
+			
+			
+			
+			List<CreditCard> tmp = cardRepo.findByUser(id);
+			List<String> cards = new ArrayList<String>();
+			if (tmp==null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			for (CreditCard c : tmp) {
+				cards.add(c.toString());
+			}
+			
+
+			return new ResponseEntity<List<String>>(cards, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

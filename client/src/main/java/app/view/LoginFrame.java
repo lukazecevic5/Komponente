@@ -14,7 +14,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import app.forms.Login_Form;
+import app.utils.HttpManager;
+import app.utils.UtilsMethods;
 
 public class LoginFrame extends JFrame implements ActionListener{
 	
@@ -67,7 +73,7 @@ public class LoginFrame extends JFrame implements ActionListener{
     }
 
 
-    @Override
+	@Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
             String userText;
@@ -77,12 +83,23 @@ public class LoginFrame extends JFrame implements ActionListener{
             Login_Form form = new Login_Form();
             form.setEmail(userText);
             form.setPassword(pwdText);
-            long id = 1;
-            if (userText.equalsIgnoreCase("mehtab") && pwdText.equalsIgnoreCase("12345")) {
-                new UserView(id);
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid Username or Password");
-            }
+            String path = HttpManager.getSelectedPath("service-registrator");
+			ResponseEntity<String> response = UtilsMethods.sendPostStr(path + "login", form);
+			if (response.getStatusCode()==HttpStatus.OK) {
+				HttpHeaders headers = response.getHeaders();
+				String value = headers.getFirst(HttpHeaders.AUTHORIZATION);
+				ResponseEntity<Long> idUserRes = UtilsMethods.sendGetLgHead(path+"whoAmI", value);
+				if (idUserRes.getStatusCode()==HttpStatus.ACCEPTED) {
+					long idUser = idUserRes.getBody();
+					dispose();
+					new UserView(idUser);
+				}else {
+					new OptionDialog("Nisam dobro procitao usera");
+				}
+		    } 
+			else {
+		            JOptionPane.showMessageDialog(this, "Invalid Username or Password");
+		          }
 
         }
         if (e.getSource() == resetButton) {

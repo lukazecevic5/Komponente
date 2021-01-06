@@ -11,7 +11,10 @@ import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.ListModel;
 
+import org.springframework.http.ResponseEntity;
+
 import app.forms.KartaForm;
+import app.utils.HttpManager;
 import app.view.OptionDialog;
 
 public class BuyTicketDialog extends JDialog {
@@ -24,7 +27,6 @@ public class BuyTicketDialog extends JDialog {
 		
 		buy.addActionListener(new ActionListener() {
 			
-			@SuppressWarnings("unused")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String selected = flightsView.getSelectedValue();
@@ -33,14 +35,7 @@ public class BuyTicketDialog extends JDialog {
 				KartaForm form = new KartaForm();
 				form.setLet(idSel);
 				form.setUser(idUser);
-				//ima li karticu?
-				
-				if(true) {
-					//kupi kartu
-				}
-				else {
-					new AddCardDialog(idUser);
-				}
+				new PickCardDialog(form);
 				
 			}
 		});

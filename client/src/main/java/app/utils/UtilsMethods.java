@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class UtilsMethods {
@@ -72,6 +73,19 @@ public class UtilsMethods {
 		return response;
 	}
 
+	public static ResponseEntity<Long> sendGetLgHead(String url,String head) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", head);
+
+		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
+		ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.GET, entity, Long.class);
+
+		return response;
+	}
+	
 	public static ResponseEntity<Long> sendPostLg(String url, Object body) {
 
 		RestTemplate restTemplate = new RestTemplate();
@@ -92,6 +106,17 @@ public class UtilsMethods {
 		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
 		ResponseEntity<List<Long>> response = restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<List<Long>>() {});
+
+		return response;
+	}
+	public static ResponseEntity<List<String>> sendGetLstr(String url) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+
+		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
+		ResponseEntity<List<String>> response = restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<List<String>>() {});
 
 		return response;
 	}

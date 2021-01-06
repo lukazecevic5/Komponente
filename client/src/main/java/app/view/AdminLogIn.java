@@ -12,8 +12,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import app.forms.AdminForm;
 import app.forms.Login_Form;
+import app.utils.HttpManager;
+import app.utils.UtilsMethods;
 
 public class AdminLogIn extends JFrame implements ActionListener {
 	Container container = getContentPane();
@@ -68,20 +73,26 @@ public class AdminLogIn extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            String userText;
-            String pwdText;
-            userText = userTextField.getText();
-            pwdText = passwordField.getText();
-            AdminForm form = new AdminForm();
-            form.setUsername(userText);
-            form.setPassword(pwdText);
-            long id = 1;
-            if (true) {
-            	dispose();
-                new AdminView();
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid Username or Password");
-            }
+        	try {
+	        	String userText;
+	            String pwdText;
+	            userText = userTextField.getText();
+	            pwdText = passwordField.getText();
+	            AdminForm form = new AdminForm();
+	            form.setUsername(userText);
+	            form.setPassword(pwdText);
+	            String path = HttpManager.getSelectedPath("service-registrator");
+	            ResponseEntity<String> response = UtilsMethods.sendPostStr(path+"loginAsAdmin", form);
+	            if (response.getStatusCode()==HttpStatus.ACCEPTED) {
+	            	dispose();
+	                new AdminView(userText,pwdText);
+	            } else {
+	                JOptionPane.showMessageDialog(this, "Invalid Username or Password");
+	            }
+			} catch (Exception e2) {
+				 JOptionPane.showMessageDialog(this, "Invalid Username or Password");
+			}
+           
 
         }
         if (e.getSource() == resetButton) {

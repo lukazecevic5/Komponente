@@ -7,9 +7,17 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import app.forms.PlaneForm;
+import app.utils.HttpManager;
+import app.utils.UtilsMethods;
+import app.view.AdminView;
+import app.view.OptionDialog;
 
 public class AddPlaneDialog extends JDialog {
 	
@@ -17,7 +25,7 @@ public class AddPlaneDialog extends JDialog {
 	JTextField nameT,capacityT;
 	JButton add;
 	
-	public AddPlaneDialog() {
+	public AddPlaneDialog(String username,String password) {
 		name = new JLabel("Name");
 		capacity = new JLabel("Capacity");
 		nameT = new JTextField();
@@ -28,11 +36,23 @@ public class AddPlaneDialog extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				try {
 				PlaneForm form = new PlaneForm();
 				form.setIme(nameT.getText());
 				form.setCapacity(Integer.parseInt(capacityT.getText()));
-				
-				dispose();
+				String path = HttpManager.getSelectedPath("service-letovi");
+				ResponseEntity<String> response = UtilsMethods.sendPostStr(path+"addPlane/" + username + "/"+ password, form);
+				if (response.getStatusCode()==HttpStatus.ACCEPTED) {
+					new OptionDialog("Uspesno dodavanje aviona!");
+		            dispose();
+		              
+		        } else {
+		        	new OptionDialog();
+		            }
+				}
+				catch (Exception e1) {
+					new OptionDialog();
+				}
 				
 			}
 		});

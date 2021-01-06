@@ -15,6 +15,7 @@ public class CreditCard {
 	private String ime;
 	private long broj;
 	private int kod;
+	private long user;
 	
 	
 	public CreditCard() {
@@ -22,13 +23,35 @@ public class CreditCard {
 	}
 	
 	
-	public CreditCard(String ime, long broj, int kod) {
+	public CreditCard(String ime, long broj, int kod,long user) {
 		super();
 		this.ime = ime;
 		this.broj = broj;
 		this.kod = kod;
+		this.user = user;
 	}
 	
+	
+	public long getUser() {
+		return user;
+	}
+	
+	@Override
+	public String toString() {
+		return id + " Kartica | broj: " + broj+ " | kod: +" + kod;
+	}
+
+
+	public void setUser(long user) {
+		this.user = user;
+	}
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
 	public long getId() {
 		return id;
 	}

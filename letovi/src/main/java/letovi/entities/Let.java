@@ -101,7 +101,7 @@ public class Let {
 	@Override
 	public String toString() {
 		
-		return id + " Let | Avionom " + avion + " | od " + startdest + " ka " + enddest + " | duzine: " + flightlen + " | cene: " + price + " | ostala sedista: " + seatsLeft ;
+		return id + " Let | Avionom " + avion + " | " + startdest + " -> " + enddest + " | duzine: " + flightlen + " | cene: " + price + " | ostala sedista: " + seatsLeft ;
 	}
 	
 }
