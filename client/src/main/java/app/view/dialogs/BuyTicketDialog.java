@@ -36,6 +36,7 @@ public class BuyTicketDialog extends JDialog {
 				form.setLet(idSel);
 				form.setUser(idUser);
 				new PickCardDialog(form);
+				dispose();
 				
 			}
 		});
